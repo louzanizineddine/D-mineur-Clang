@@ -1,4 +1,43 @@
 #include <stdio.h>
+#include <stdlib.h>
+
+struct Case
+{
+    // X:non devoile et non marque,
+    // F mon devoile et marque V : devoile et vide , I: vevoilee et indiquant le nombre de mine 
+    char etat;
+    int nmbr_mines__adjacentes; // pour indiquer le nombre de mines sur les cases adjacentes
+    int contient_mine; // pour indiquer si la case elle meme une mine
+};
+
+struct Grille {
+    struct Case grille[20][20];
+    int nmbre_mines_decouvertes; // indiqur le nombre totales des mines decouvertes par joueur;
+    int nmbre_totales_mines; // indique le nombre totales des mines
+};
+
+// declaration des fonctions;
+void ajouter (int tab[] , int size, int num); 
+int retire(int tab[] , int size); 
+void show_tab(int tab[] , int size);
+int rand_number(int min , int max);
+
+struct Grille cree(int nmbr_totales_mines);
+
+
+int main() {
+    int t[8] = {1 , 3 , 0 , 2 , 5 , -1 , -1 , -1};
+    // show_tab(t , 8);
+    // ajouter(t , 8 , 17);
+    // show_tab(t , 8);
+    // int frist_elem = retire(t , 8);
+    // show_tab(t , 8);
+    // printf("fist_elemt = %d \n" , frist_elem);
+    // struct Grille demineur = cree(10);
+    // printf("mines totales =  %d et decouvertes %d \n" , demineur.nmbre_totales_mines , demineur.nmbre_mines_decouvertes);
+    return 0;
+}
+
 
 void ajouter(int tab[] , int size, int num) {
     // the first element with -1 we change it's value to num
@@ -28,6 +67,8 @@ int retire(int tab[] , int size) {
 }
 
 void show_tab(int tab[] , int size) {
+
+
     for (int i = 0; i < size; i++)
     {
         printf("tab[%d]=%d |" , i , tab[i]);
@@ -36,13 +77,45 @@ void show_tab(int tab[] , int size) {
     
 }
 
-int main() {
-    int t[8] = {1 , 3 , 0 , 2 , 5 , -1 , -1 , -1};
-    show_tab(t , 8);
-    ajouter(t , 8 , 17);
-    show_tab(t , 8);
-    int frist_elem = retire(t , 8);
-    show_tab(t , 8);
-    printf("fist_elemt = %d \n" , frist_elem);
-    return 0;
+int rand_number(int min , int max) {
+    return rand() % (max + 1);
+}
+
+struct Grille cree(int nmbre_totales_mines){
+    struct Grille grille;
+    grille.nmbre_mines_decouvertes = 0;
+    grille.nmbre_totales_mines = nmbre_totales_mines;
+
+    // on va cree les cases 
+
+    for (int i = 0; i < 20; i++)
+    {
+        for (int j = 0; i < 20; j++)
+        {
+            struct Case cs;
+            cs.etat = "X";
+            cs.nmbr_mines__adjacentes = 0;
+            cs.contient_mine = 0;
+            grille.grille[i][j] = cs;
+        }
+        
+    }
+    
+
+   // on va cree les mines
+    
+    int nombre_currents_mines = 0;
+
+    while (nombre_currents_mines != nmbre_totales_mines)
+    {
+        int ligne = rand_number(0 , 20);
+        int colonne = rand_number(0 , 20);
+        if (!grille.grille[ligne][colonne].contient_mine) {
+            grille.grille[ligne][colonne].contient_mine = 1;
+            // mise a jour des les cases adjacents  
+        }
+    }
+    
+    
+    return grille;
 }
