@@ -6,7 +6,7 @@ struct Case
     // X:non devoile et non marque,
     // F mon devoile et marque V : devoile et vide , I: vevoilee et indiquant le nombre de mine 
     char etat;
-    int nmbr_mines__adjacentes; // pour indiquer le nombre de mines sur les cases adjacentes
+    int nmbr_mines_adjacentes; // pour indiquer le nombre de mines sur les cases adjacentes
     int contient_mine; // pour indiquer si la case elle meme une mine
 };
 
@@ -21,6 +21,7 @@ void ajouter (int tab[] , int size, int num);
 int retire(int tab[] , int size); 
 void show_tab(int tab[] , int size);
 int rand_number(int min , int max);
+void update_cases_adja(struct Grille grille , int ligne , int colonne);
 
 struct Grille cree(int nmbr_totales_mines);
 
@@ -94,7 +95,7 @@ struct Grille cree(int nmbre_totales_mines){
         {
             struct Case cs;
             cs.etat = "X";
-            cs.nmbr_mines__adjacentes = 0;
+            cs.nmbr_mines_adjacentes = 0;
             cs.contient_mine = 0;
             grille.grille[i][j] = cs;
         }
@@ -112,10 +113,53 @@ struct Grille cree(int nmbre_totales_mines){
         int colonne = rand_number(0 , 20);
         if (!grille.grille[ligne][colonne].contient_mine) {
             grille.grille[ligne][colonne].contient_mine = 1;
-            // mise a jour des les cases adjacents  
+            // mise a jour des les cases adjacent 
+            update_cases_adja(grille , ligne , colonne);
+            nombre_currents_mines += 1;
         }
     }
     
     
     return grille;
+}
+
+void update_cases_adja(struct Grille grille , int ligne , int colonne) {
+    if (ligne == 0 ) {
+        if (colonne == 0) {
+            grille.grille[ligne + 1][colonne].nmbr_mines_adjacentes +=1;  
+            grille.grille[ligne][colonne + 1].nmbr_mines_adjacentes +=1;  
+            grille.grille[ligne + 1][colonne + 1].nmbr_mines_adjacentes +=1;  
+        } else if (colonne == 19) {
+            grille.grille[ligne + 1][colonne].nmbr_mines_adjacentes +=1;  
+            grille.grille[ligne][colonne - 1].nmbr_mines_adjacentes +=1;  
+            grille.grille[ligne - 1][colonne - 1].nmbr_mines_adjacentes +=1;  
+        }
+
+    }
+
+    else if (ligne == 19) {
+        if (colonne == 0) {
+            grille.grille[ligne - 1][colonne].nmbr_mines_adjacentes +=1;  
+            grille.grille[ligne][colonne + 1].nmbr_mines_adjacentes +=1;  
+            grille.grille[ligne - 1][colonne + 1].nmbr_mines_adjacentes +=1;  
+
+        } else if (colonne == 19) {
+            grille.grille[ligne - 1][colonne].nmbr_mines_adjacentes +=1;  
+            grille.grille[ligne][colonne - 1].nmbr_mines_adjacentes +=1;  
+            grille.grille[ligne - 1][colonne - 1].nmbr_mines_adjacentes +=1;  
+
+
+        }
+    }
+    else {
+            grille.grille[ligne - 1][colonne - 1].nmbr_mines_adjacentes +=1;  
+            grille.grille[ligne ][colonne -1].nmbr_mines_adjacentes +=1;  
+            grille.grille[ligne + 1][colonne -1].nmbr_mines_adjacentes +=1;
+
+            grille.grille[ligne - 1][colonne].nmbr_mines_adjacentes +=1;
+            grille.grille[ligne + 1][colonne].nmbr_mines_adjacentes +=1;
+            grille.grille[ligne - 1][colonne + 1].nmbr_mines_adjacentes +=1;  
+            grille.grille[ligne][colonne + 1].nmbr_mines_adjacentes +=1;
+            grille.grille[ligne + 1][colonne + 1].nmbr_mines_adjacentes +=1;  
+        }
 }
